@@ -14,7 +14,7 @@ TEST_CASE("json") {
   MockTracerOptions tracer_options;
   tracer_options.recorder.reset(recorder);
   auto tracer = std::shared_ptr<opentracing::Tracer>{
-      new MockTracer{std::move(tracer_options)}};
+      std::make_shared<MockTracer>(std::move(tracer_options))};
 
   SpanContextData span_context_data;
   span_context_data.trace_id = 123;

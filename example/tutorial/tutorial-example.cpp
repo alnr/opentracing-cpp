@@ -19,7 +19,7 @@ int main() {
       new JsonRecorder{std::move(output)}};
 
   std::shared_ptr<opentracing::Tracer> tracer{
-      new MockTracer{std::move(options)}};
+      std::make_shared<MockTracer>(std::move(options))};
 
   auto parent_span = tracer->StartSpan("parent");
   assert(parent_span);

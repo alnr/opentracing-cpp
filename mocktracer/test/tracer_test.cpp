@@ -15,11 +15,11 @@ TEST_CASE("tracer") {
   MockTracerOptions tracer_options;
   tracer_options.recorder.reset(recorder);
   auto tracer = std::shared_ptr<opentracing::Tracer>{
-      new MockTracer{std::move(tracer_options)}};
+      std::make_shared<MockTracer>(std::move(tracer_options))};
 
   SECTION("MockTracer can be constructed without a recorder.") {
     auto norecorder_tracer = std::shared_ptr<opentracing::Tracer>{
-        new MockTracer{MockTracerOptions{}}};
+        std::make_shared<MockTracer>(MockTracerOptions{})};
     auto span = norecorder_tracer->StartSpan("a");
   }
 
@@ -178,7 +178,7 @@ TEST_CASE("json_recorder") {
   tracer_options.recorder = std::unique_ptr<Recorder>{
       new JsonRecorder{std::unique_ptr<std::ostream>{oss}}};
   auto tracer =
-      std::shared_ptr<Tracer>{new MockTracer{std::move(tracer_options)}};
+      std::shared_ptr<Tracer>{std::make_shared<MockTracer>(std::move(tracer_options))};
 
   SECTION("Spans are serialized to the stream upon Close.") {
     auto span = tracer->StartSpan("a");

@@ -84,8 +84,11 @@ class NoopTracer : public Tracer,
 };
 }  // anonymous namespace
 
-std::shared_ptr<Tracer> MakeNoopTracer() noexcept {
-  return std::shared_ptr<Tracer>(new (std::nothrow) NoopTracer());
+std::shared_ptr<Tracer> MakeNoopTracer() noexcept try {
+  return std::shared_ptr<Tracer>(std::make_shared<NoopTracer>());
+}
+catch (...) {
+  return nullptr;
 }
 END_OPENTRACING_ABI_NAMESPACE
 }  // namespace opentracing

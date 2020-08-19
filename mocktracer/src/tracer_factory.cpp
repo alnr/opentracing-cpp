@@ -129,7 +129,7 @@ expected<std::shared_ptr<Tracer>> MockTracerFactory::MakeTracer(
   tracer_options.recorder =
       std::unique_ptr<Recorder>{new JsonRecorder{std::move(ostream)}};
 
-  return std::shared_ptr<Tracer>{new MockTracer{std::move(tracer_options)}};
+  return std::shared_ptr<Tracer>{std::make_shared<MockTracer>(std::move(tracer_options))};
 } catch (const std::bad_alloc&) {
   return make_unexpected(std::make_error_code(std::errc::not_enough_memory));
 }

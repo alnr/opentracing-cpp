@@ -76,7 +76,7 @@ TEST_CASE("propagation") {
   tracer_options.propagation_options.propagation_key = propagation_key;
   tracer_options.recorder.reset(recorder);
   auto tracer = std::shared_ptr<opentracing::Tracer>{
-      new MockTracer{std::move(tracer_options)}};
+      std::make_shared<MockTracer>(std::move(tracer_options))};
   std::unordered_map<std::string, std::string> text_map;
   TextMapCarrier text_map_carrier(text_map);
   HTTPHeadersCarrier http_headers_carrier(text_map);
@@ -213,7 +213,7 @@ TEST_CASE("propagation") {
     auto error_code = std::make_error_code(std::errc::network_down);
     tracer_options_fail.propagation_options.inject_error_code = error_code;
     tracer = std::shared_ptr<opentracing::Tracer>{
-        new MockTracer{std::move(tracer_options_fail)}};
+        std::make_shared<MockTracer>(std::move(tracer_options_fail))};
 
     std::ostringstream oss;
     auto rcode = tracer->Inject(span->context(), oss);
@@ -226,7 +226,7 @@ TEST_CASE("propagation") {
     auto error_code = std::make_error_code(std::errc::network_down);
     tracer_options_fail.propagation_options.extract_error_code = error_code;
     tracer = std::shared_ptr<opentracing::Tracer>{
-        new MockTracer{std::move(tracer_options_fail)}};
+        std::make_shared<MockTracer>(std::move(tracer_options_fail))};
 
     CHECK(tracer->Inject(span->context(), text_map_carrier));
     auto span_context_maybe = tracer->Extract(text_map_carrier);
